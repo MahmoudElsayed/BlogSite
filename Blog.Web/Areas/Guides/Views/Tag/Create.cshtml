@@ -1,0 +1,79 @@
+﻿@model TagDTO;
+@{
+    Layout = "_Layout";
+}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <a href="@Url.GetAction("Index")">
+            الوسوم
+        </a>
+
+    </section>
+    <section class="content-header">
+        <h1>اضافة وسم </h1>
+
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <div class="box box-primary">
+
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <form role="form">
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label for="Title">الاسم</label>
+                                <input type="text"  asp-for="TagName" class="form-control" placeholder="الاسم">
+                            </div>
+                           
+
+
+
+
+
+
+                        </div>
+                        <!-- /.box-body -->
+
+                        <div class="box-footer">
+                            <button type="button" id="btnSave" class="btn btn-primary">حفظ</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.box -->
+
+
+            </div>
+            <!--/.col (left) -->
+
+        </div>
+        <!-- /.row -->
+    </section>
+    <!-- /.content -->
+</div>
+@section Scripts
+{
+    <script>
+        $('#btnSave').on('click', function () {
+            $.post('@Url.GetAction("Save")', $('form').serialize(), function (res) {
+                if (res.status) {
+                    alertify.success(res.message);
+                    setTimeout(function () {
+                        window.location.href = "@Url.GetAction("Index")";
+                    }, 2000);
+
+                }
+                else {
+                    alertify.error(res.message);
+
+                }
+            })
+        })
+    </script>
+}

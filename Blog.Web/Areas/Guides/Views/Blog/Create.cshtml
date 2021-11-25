@@ -1,0 +1,87 @@
+﻿@model BlogDTO;
+@{
+    Layout = "_Layout";
+}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <a href="@Url.GetAction("Index")">
+            المقالات
+        </a>
+
+    </section>
+    <section class="content-header">
+        <h1>اضافة مقالة </h1>
+
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-6">
+                <!-- general form elements -->
+                <div class="box box-primary">
+
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <form role="form">
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label for="Title">العنوان</label>
+                                <input type="text" maxlength="500" asp-for="Title" class="form-control" placeholder="العنوان">
+                            </div>
+                            <div class="form-group">
+                                <label for="Description">التفاصيل</label>
+                                <textarea asp-for="Description" class="form-control" placeholder="الوسوم">
+                              </textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="Tags">الوسوم</label>
+                                <select asp-for="TagId" asp-items="ViewBag.Tags" class="form-control"></select>
+                            </div>
+
+
+
+
+
+
+                        </div>
+                        <!-- /.box-body -->
+
+                        <div class="box-footer">
+                            <button type="button" id="btnSave" class="btn btn-primary">حفظ</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.box -->
+
+
+            </div>
+            <!--/.col (left) -->
+
+        </div>
+        <!-- /.row -->
+    </section>
+    <!-- /.content -->
+</div>
+@section Scripts
+{
+    <script>
+        $('#btnSave').on('click', function () {
+            $.post('@Url.GetAction("Save")', $('form').serialize(), function (res) {
+                if (res.status) {
+                    alertify.success(res.message);
+                    setTimeout(function () {
+                        window.location.href = "@Url.GetAction("Index")";
+                    }, 2000);
+
+                }
+                else {
+                    alertify.error(res.message);
+
+                }
+            })
+        })
+    </script>
+}

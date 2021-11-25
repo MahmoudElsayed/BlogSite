@@ -1,0 +1,164 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            دليل المقالات
+        </h1>
+       
+    </section>
+    <section class="content-header">
+        <a class="btn btn-primary pull-left" href="@Url.GetAction("Create")">اضافة</a>
+
+    </section>
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="box box-primary">
+
+                        <!-- /.box-header -->
+                        <!-- form start -->
+                        <form role="form">
+                            <div class="box-body">
+                                <partial name="_DataTable" />
+
+
+                            </div>
+                            <!-- /.box-body -->
+
+
+                        </form>
+                    </div>
+                    <!-- /.box -->
+
+
+                </div>
+
+            </div>
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
+</div>
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            console.log(11);
+            LoadTable();
+        })
+        function LoadTable() {
+            dt = $('#tbl').DataTable({ "columnDefs": [{ "defaultContent": "-", "targets": "_all" }],
+
+                pageLength: 20,
+                pagijngType: "full_numbers",
+                serverSide: true,
+                processing: true,
+                lengthMenu: [ 10, 25, 50, 75, 100 ],
+                sAjaxSource: '@Url.GetAction("LoadDataTable")',
+                sServerMethod: "POST",
+                bPaginate: true,
+                paging: true,
+                dom: 'Blfrtip',
+                buttons: [
+
+
+                ],
+                columns: [
+
+
+
+                    {
+                        data: null,
+                        bSortable: false,
+                        render: function (data, type, row, meta) {
+                            return '<input type="hidden" value="'+data.id+'"><label>' + (meta.row + meta.settings._iDisplayStart + 1) + '</label>';
+                        }
+
+                    },
+
+
+
+                    {
+                        data: null,
+                        bSortable: false,
+                        render: function (data, type, row) { return '<label>' + (data.title ?? "") + '</label>' }
+
+                    },
+                    {
+                        data: null,
+                        bSortable: false,
+                        render: function (data, type, row) { return '<label>' + (data.description ?? "") + '</label>' }
+
+                    },
+                    {
+                        data: null,
+                        bSortable: false,
+                        render: function (data, type, row) { return '<label>' + (data.tagName ?? "") + '</label>' }
+
+                    },
+                    {
+                        data: null,
+                        bSortable: false,
+                        render: function (data, type, row) { return '<label>' + (data.addedTime ?? "") + '</label>' }
+
+                    },
+                 
+
+                    {
+
+                        data: null,
+                        bSortable: false,
+                        render: function (data, type, row) {
+                            let btn = '<div class="d-flex">';
+
+                                btn += '<a title="تعديل" href="@Url.GetAction("Edit")/' + data.id + '" style="margin:5px" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>';
+                                btn += '<button title="حذف"  type="button" onclick="Delete(this)" class="btn btn-danger shadow btn-xs sharp"><i class="fa fa-trash"></i></button></div>';
+                            return btn;
+
+                        }
+                    }
+                ]
+            });
+
+        }
+            //#region Delete
+
+        function Delete(e) {
+
+        alertify.confirm().setting('modal', false);
+
+        var btn = $(e);
+        var id = $(btn.closest('tr')).find('input[type=hidden]').val();
+        alertify.confirm('هل انت متاكد من اجراء العملية', '', function () {
+
+            $.post('@Url.GetAction("Delete")', {id:id}, function (res) {
+
+                 if (res.status) {
+                     alertify.success(res.message);
+                     btn.closest('tr').remove();
+
+
+                }
+                else {
+                    alertify.alert(res.message).setHeader('توقف');
+
+                }
+
+
+
+
+            });
+
+        },
+
+            function () { }
+        ).set('labels', { ok: 'نعم', cancel: 'لا' });
+    }
+        //#endregion
+    </script>
+}
